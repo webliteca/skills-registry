@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:simpleType name="skillNameType">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[a-z][a-z0-9]*(\-[a-z0-9]+)*"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="mavenGroupIdType">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[a-zA-Z_][a-zA-Z0-9_]*(\.[a-zA-Z_][a-zA-Z0-9_]*)*"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="mavenArtifactIdType">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[a-zA-Z_][a-zA-Z0-9_\-]*"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="nonEmptyString">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="skills">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="skill" type="skillType" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+    <xs:unique name="uniqueSkillName">
+      <xs:selector xpath="skill"/>
+      <xs:field xpath="name"/>
+    </xs:unique>
+  </xs:element>
+
+  <xs:complexType name="skillType">
+    <xs:sequence>
+      <xs:element name="name" type="skillNameType"/>
+      <xs:element name="groupId" type="mavenGroupIdType"/>
+      <xs:element name="artifactId" type="mavenArtifactIdType"/>
+      <xs:element name="version" type="nonEmptyString" minOccurs="0"/>
+      <xs:element name="description" type="nonEmptyString"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>

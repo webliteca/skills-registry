@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skills xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="skills-registry.xsd">
+  <skill>
+    <name>teavm-lambda</name>
+    <groupId>ca.weblite</groupId>
+    <artifactId>teavm-lambda-parent</artifactId>
+    <description>Server-side java library for cloud deployment with instant cold start</description>
+  </skill>
+  <skill>
+    <name>teavm-react</name>
+    <groupId>ca.weblite</groupId>
+    <artifactId>teavm-react-parent</artifactId>
+    <description>Java wrapper for react</description>
+  </skill>
+</skills>
