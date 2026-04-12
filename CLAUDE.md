@@ -43,6 +43,13 @@ python3 scripts/validate-skills.py
 </skill>
 ```
 
+## Related projects
+
+- **[install-skill-cli](https://github.com/webliteca/install-skill-cli)** — CLI tool that resolves skill names from this registry to Maven coordinates and installs them. Supports `.skills-versions` files for declarative project-level skill management.
+- **[skills-jar-maven-plugin](https://github.com/webliteca/skills-jar-maven-plugin)** — Maven plugin that packages and installs skill bundles as Maven artifacts.
+
+The registry is consumed by `install-skill-cli` via the raw GitHub URL: `https://raw.githubusercontent.com/webliteca/skills-registry/main/skills.xml`. When users run `install-skill <name>`, the CLI fetches this file, looks up the skill name, and resolves it to Maven coordinates.
+
 ## Branch workflow
 
 The `main` branch is protected. All changes must go through a pull request. CI must pass before merging.
