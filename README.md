@@ -45,6 +45,27 @@ The CI workflow (`.github/workflows/validate-pr.yml`) runs on every PR to `main`
 3. **Deletion requires approval** — removing a skill fails CI unless the `approved:deletion` label is added to the PR.
 4. **Schema changes require approval** — modifying `skills-registry.xsd` fails CI unless the `approved:schema-change` label is added to the PR.
 
+## Using skills from the registry
+
+Skills registered here can be installed using the [install-skill CLI](https://github.com/webliteca/install-skill-cli):
+
+```bash
+# Install a single skill by name
+install-skill teavm-lambda
+
+# Install a specific version
+install-skill teavm-lambda@0.1.2
+```
+
+For project-level skill management, create a `.skills-versions` file listing the skills your project needs:
+
+```
+teavm-lambda@0.1.2
+my-other-skill@1.0.0
+```
+
+Then run `install-skill` with no arguments to install all listed skills. See the [install-skill-cli README](https://github.com/webliteca/install-skill-cli) for full documentation.
+
 ## Local validation
 
 Validate the XML against the schema locally with `xmllint`:
