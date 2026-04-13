@@ -13,4 +13,9 @@
     <artifactId>teavm-react-parent</artifactId>
     <description>Java wrapper for react</description>
   </skill>
+  <skill>
+    <name>manage-registry</name>
+    <repository>webliteca/skills-registry</repository>
+    <description>Add or update skill entries in the skills registry and create a pull request</description>
+  </skill>
 </skills>
