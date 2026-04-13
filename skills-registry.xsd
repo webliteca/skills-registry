@@ -25,6 +25,12 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:simpleType name="githubRepoType">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[a-zA-Z0-9][\-a-zA-Z0-9]*/[a-zA-Z0-9][\-a-zA-Z0-9_\.]*"/>
+    </xs:restriction>
+  </xs:simpleType>
+
   <xs:element name="skills">
     <xs:complexType>
       <xs:sequence>
@@ -40,8 +46,13 @@
   <xs:complexType name="skillType">
     <xs:sequence>
       <xs:element name="name" type="skillNameType"/>
-      <xs:element name="groupId" type="mavenGroupIdType"/>
-      <xs:element name="artifactId" type="mavenArtifactIdType"/>
+      <xs:choice>
+        <xs:sequence>
+          <xs:element name="groupId" type="mavenGroupIdType"/>
+          <xs:element name="artifactId" type="mavenArtifactIdType"/>
+        </xs:sequence>
+        <xs:element name="repository" type="githubRepoType"/>
+      </xs:choice>
       <xs:element name="version" type="nonEmptyString" minOccurs="0"/>
       <xs:element name="description" type="nonEmptyString"/>
     </xs:sequence>

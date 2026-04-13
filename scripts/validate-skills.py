@@ -28,25 +28,28 @@ def get_base_file(filepath):
         return None
 
 
+def _get_text(element, tag):
+    """Get stripped text content of a child element, or empty string."""
+    el = element.find(tag)
+    if el is not None and el.text:
+        return el.text.strip()
+    return ""
+
+
 def parse_skills(xml_content):
     """Parse skills XML into a dict keyed by skill name."""
     root = ET.fromstring(xml_content)
     skills = {}
     for skill in root.findall("skill"):
-        name_el = skill.find("name")
-        group_el = skill.find("groupId")
-        artifact_el = skill.find("artifactId")
-        name = name_el.text.strip() if name_el is not None and name_el.text else ""
-        group_id = group_el.text.strip() if group_el is not None and group_el.text else ""
-        artifact_id = (
-            artifact_el.text.strip()
-            if artifact_el is not None and artifact_el.text
-            else ""
-        )
+        name = _get_text(skill, "name")
+        group_id = _get_text(skill, "groupId")
+        artifact_id = _get_text(skill, "artifactId")
+        repository = _get_text(skill, "repository")
         skills[name] = {
             "name": name,
             "groupId": group_id,
             "artifactId": artifact_id,
+            "repository": repository,
         }
     return skills
 
@@ -96,22 +99,42 @@ def main():
 
     pr_labels = get_pr_labels()
 
-    # --- Check immutability: name, groupId, artifactId cannot change ---
+    # --- Check immutability: coordinates cannot change ---
     for name, base_skill in base_skills.items():
         if name in current_skills:
             current_skill = current_skills[name]
-            if base_skill["groupId"] != current_skill["groupId"]:
+            base_is_github = bool(base_skill["repository"])
+            current_is_github = bool(current_skill["repository"])
+
+            if base_is_github != current_is_github:
+                base_type = "GitHub" if base_is_github else "Maven"
+                current_type = "GitHub" if current_is_github else "Maven"
                 errors.append(
-                    f"Skill '{name}': groupId is immutable. "
-                    f"Cannot change from '{base_skill['groupId']}' "
-                    f"to '{current_skill['groupId']}'."
+                    f"Skill '{name}': source type is immutable. "
+                    f"Cannot change from {base_type} to {current_type}."
                 )
-            if base_skill["artifactId"] != current_skill["artifactId"]:
-                errors.append(
-                    f"Skill '{name}': artifactId is immutable. "
-                    f"Cannot change from '{base_skill['artifactId']}' "
-                    f"to '{current_skill['artifactId']}'."
-                )
+            elif base_is_github:
+                # GitHub skill: repository is immutable
+                if base_skill["repository"] != current_skill["repository"]:
+                    errors.append(
+                        f"Skill '{name}': repository is immutable. "
+                        f"Cannot change from '{base_skill['repository']}' "
+                        f"to '{current_skill['repository']}'."
+                    )
+            else:
+                # Maven skill: groupId and artifactId are immutable
+                if base_skill["groupId"] != current_skill["groupId"]:
+                    errors.append(
+                        f"Skill '{name}': groupId is immutable. "
+                        f"Cannot change from '{base_skill['groupId']}' "
+                        f"to '{current_skill['groupId']}'."
+                    )
+                if base_skill["artifactId"] != current_skill["artifactId"]:
+                    errors.append(
+                        f"Skill '{name}': artifactId is immutable. "
+                        f"Cannot change from '{base_skill['artifactId']}' "
+                        f"to '{current_skill['artifactId']}'."
+                    )
 
     # --- Check for deleted skills ---
     deleted_skills = set(base_skills.keys()) - set(current_skills.keys())

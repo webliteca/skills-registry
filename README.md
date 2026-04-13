@@ -1,8 +1,12 @@
 # Skills Registry
 
-A central registry of skills deployed to Maven via the [skills-jar-maven-plugin](https://github.com/webliteca/skills-jar-maven-plugin). The registry is a single XML file (`skills.xml`) validated against an XML schema (`skills-registry.xsd`).
+A central registry of skills deployed to Maven via the [skills-jar-maven-plugin](https://github.com/webliteca/skills-jar-maven-plugin) or hosted on GitHub repositories. The registry is a single XML file (`skills.xml`) validated against an XML schema (`skills-registry.xsd`).
 
 ## Registry format
+
+A skill can be sourced from either Maven or GitHub, not both.
+
+### Maven skill
 
 ```xml
 <skills>
@@ -16,17 +20,31 @@ A central registry of skills deployed to Maven via the [skills-jar-maven-plugin]
 </skills>
 ```
 
+### GitHub skill
+
+```xml
+<skills>
+  <skill>
+    <name>my-skill</name>
+    <repository>owner/repo</repository>
+    <version>v1.0</version>            <!-- optional tag/branch -->
+    <description>Some description of the skill</description>
+  </skill>
+</skills>
+```
+
 ### Field rules
 
 | Field | Required | Format | Mutable |
 |---|---|---|---|
 | `name` | yes | kebab-case (`[a-z][a-z0-9]*(-[a-z0-9]+)*`) | no |
-| `groupId` | yes | Maven groupId (`com.example.app`) | no |
-| `artifactId` | yes | Maven artifactId (`my-library`) | no |
+| `groupId` | for Maven skills | Maven groupId (`com.example.app`) | no |
+| `artifactId` | for Maven skills | Maven artifactId (`my-library`) | no |
+| `repository` | for GitHub skills | GitHub `owner/repo` | no |
 | `version` | no | Free-form non-empty string | yes |
 | `description` | yes | Free-form non-empty string | yes |
 
-Skill names must be unique across the entire registry.
+Each skill uses either `groupId` + `artifactId` (Maven) or `repository` (GitHub). Skill names must be unique across the entire registry.
 
 ## Adding a skill
 
@@ -41,7 +59,7 @@ Skill names must be unique across the entire registry.
 The CI workflow (`.github/workflows/validate-pr.yml`) runs on every PR to `main` and enforces:
 
 1. **Valid XML** — `skills.xml` must conform to `skills-registry.xsd`.
-2. **Immutability** — `name`, `groupId`, and `artifactId` of existing skills cannot be changed.
+2. **Immutability** — `name` is always immutable. For Maven skills, `groupId` and `artifactId` cannot be changed. For GitHub skills, `repository` cannot be changed. The source type (Maven vs GitHub) cannot be changed.
 3. **Deletion requires approval** — removing a skill fails CI unless the `approved:deletion` label is added to the PR.
 4. **Schema changes require approval** — modifying `skills-registry.xsd` fails CI unless the `approved:schema-change` label is added to the PR.
 
