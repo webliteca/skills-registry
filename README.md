@@ -48,6 +48,25 @@ Each skill uses either `groupId` + `artifactId` (Maven) or `repository` (GitHub)
 
 ## Adding a skill
 
+### Using Claude Code (recommended)
+
+The easiest way to add or update a skill is with the built-in `manage-registry` skill. Clone the repo and run it:
+
+```bash
+git clone https://github.com/webliteca/skills-registry.git
+cd skills-registry
+```
+
+Then in Claude Code, ask it to add your skill. The `manage-registry` skill in `.claude/skills/` will guide you through the process — gathering the required fields, validating the XML, and creating a PR.
+
+Alternatively, you can install the skill with the install-skill CLI and use it in any project:
+
+```bash
+install-skill manage-registry
+```
+
+### Manually
+
 1. Fork this repository or create a branch.
 2. Add a new `<skill>` entry to `skills.xml`.
 3. Open a pull request targeting `main`.
