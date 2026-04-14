@@ -97,8 +97,8 @@ install-skill teavm-lambda@0.1.2
 For project-level skill management, create a `.skills-versions` file listing the skills your project needs:
 
 ```
-teavm-lambda@0.1.2
-my-other-skill@1.0.0
+teavm-lambda 0.1.2
+my-other-skill 1.0.0
 ```
 
 Then run `install-skill` with no arguments to install all listed skills. See the [install-skill-cli README](https://github.com/webliteca/install-skill-cli) for full documentation.
